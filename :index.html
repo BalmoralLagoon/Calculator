@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Balmoral Lagoon – Event Pricing Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --navy:#0F4876;
+    --deep-navy:#163963;
+    --gold:#CB9700;
+    --bg:#F7F9FC;
+  }
+  body{
+    font-family:"Gotham", "Montserrat", sans-serif;
+    background:var(--bg);
+    color:var(--deep-navy);
+    margin:0; padding:0;
+    display:flex; justify-content:center; align-items:flex-start;
+  }
+  .wrapper{
+    width:100%; max-width:520px; background:#fff; margin:30px; padding:24px 28px;
+    border-radius:18px; box-shadow:0 6px 14px rgba(0,0,0,.1);
+  }
+  h1{font-size:1.6rem; margin:0 0 8px;}
+  label{display:block; font-weight:600; margin:18px 0 6px;}
+  select, input{
+    width:100%; padding:10px 12px; border:2px solid var(--navy); border-radius:10px;
+    font-size:1rem; background:#fff;
+  }
+  input[type="number"]{ -moz-appearance:textfield; }
+  input::-webkit-outer-spin-button, input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .total{
+    margin:26px 0 12px; font-size:1.5rem; font-weight:700; text-align:center;
+    border-top:2px dashed var(--gold); padding-top:18px;
+  }
+  .btn{
+    display:block; width:100%; text-align:center; background:var(--gold); color:#fff;
+    padding:14px 0; border-radius:50px; font-weight:700; font-size:1rem; text-decoration:none;
+    transition:.25s transform;
+  }
+  .btn:hover{ transform:scale(1.03); }
+  .note{font-size:.82rem; text-align:center; margin-top:10px; color:#666;}
+</style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <h1>Plan Your Perfect Lagoon Event 🌊</h1>
+
+    <label for="venue">Choose your venue</label>
+    <select id="venue">
+      <option value="" selected disabled>— Select Venue —</option>
+      <option value="Serenity Beach Pavilion">Serenity Beach Pavilion</option>
+      <option value="Paradise Palms Pavilion">Paradise Palms Pavilion</option>
+      <option value="Celebration Lawn">Celebration Lawn</option>
+      <option value="Small Pavilion">Small Pavilion</option>
+      <option value="Splash Pad Pavilion">Splash Pad Pavilion</option>
+      <option value="Meeting Room">Meeting Room</option>
+      <option value="Meeting Room + Patio">Meeting Room + Patio</option>
+      <option value="Castle Hall">Castle Hall</option>
+    </select>
+
+    <label for="time">Choose your package / time</label>
+    <select id="time">
+      <option value="" selected disabled>— Select Time —</option>
+      <option value="3hr">3 hours</option>
+      <option value="7hr">7 hours</option>
+      <option value="early">Early Slot</option>
+      <option value="late">Late Slot</option>
+      <option value="fullday">Full Day</option>
+    </select>
+
+    <label for="mGuests">Extra member guests ($10 ea)</label>
+    <input id="mGuests" type="number" min="0" value="0">
+
+    <label for="nmGuests">Extra non‑member guests ($20 ea)</label>
+    <input id="nmGuests" type="number" min="0" value="0">
+
+    <label for="hours">Extra event hours ($200 / hr)</label>
+    <input id="hours" type="number" min="0" value="0">
+
+    <div class="total" id="total">$0.00</div>
+
+    <a href="mailto:events@lagoonfanatics.com?subject=Event%20Inquiry" class="btn">Submit Inquiry</a>
+    <div class="note">Prices are estimates based on the 2025 Events Pricing Lagoon sheet [oai_citation:0‡2025 Events Pricing Lagoon Front & Back .pdf](file-service://file-FxCwhdrVdsvLgYZ1GRuhyn). Final quote subject to availability & approval.</div>
+  </div>
+
+<script>
+const priceTable={
+  "Serenity Beach Pavilion": { "3hr":1275, "7hr":2550 },
+  "Paradise Palms Pavilion": { "3hr":1350, "7hr":2700 },
+  "Celebration Lawn":{ "3hr":1275, "7hr":2550 },
+  "Small Pavilion": { "3hr":250,  "7hr":500 },
+  "Splash Pad Pavilion":{ "3hr":400, "7hr":800 },
+  "Meeting Room":       { "3hr":650, "early":1050, "late":1650 },
+  "Meeting Room + Patio":{ "early":2300, "late":3400 },
+  "Castle Hall": { "early":5000, "late":7000, "fullday":10000 }
+};
+
+function calc(){
+  const v=document.getElementById('venue').value;
+  const t=document.getElementById('time').value;
+  const m=+document.getElementById('mGuests').value||0;
+  const n=+document.getElementById('nmGuests').value||0;
+  const h=+document.getElementById('hours').value||0;
+
+  let base=0;
+  if(priceTable[v] && priceTable[v][t]!==undefined){ base=priceTable[v][t]; }
+
+  const extraGuests = (m*10)+(n*20);
+  const extraHours  = h*200;
+  const total = base + extraGuests + extraHours;
+
+  document.getElementById('total').textContent =
+    total? `$${total.toLocaleString()}` : '$0.00';
+}
+
+['venue','time','mGuests','nmGuests','hours'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',calc);
+});
+</script>
+</body>
+</html>
